@@ -48,13 +48,6 @@ function formatDate(date) {
   return `${formattedDay} ${hours}:${minutes}`;
 }
 
-function formatShortDay(timestamp) {
-  let shortDate = new Date(timestamp * 1000);
-  let shortDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-  return shortDays[shortDate.getDay()];
-}
-
 function showWeather(response) {
   let temperature = Math.round(response.data.temperature.current);
   let humidity = Math.round(response.data.temperature.humidity);
@@ -92,46 +85,6 @@ function showWeather(response) {
 
   let currentTempElement = document.querySelector("#current-temp-value");
   currentTempElement.innerHTML = temperature;
-
-  let requestForecast = true;
-  getForecast(city, requestForecast);
-}
-
-function getForecast(city, forecast) {
-  axios.get(getApiUrl(city, forecast)).then(showForecast);
-}
-
-function showForecast(response) {
-  let forecastDataInjection = "";
-
-  let dailyForecastData = response.data.daily;
-
-  dailyForecastData.forEach(function (day, index) {
-    if (index < 5) {
-      let max = Math.round(day.temperature.maximum);
-      let min = Math.round(day.temperature.minimum);
-      let date = day.time;
-
-      forecastDataInjection += `
-      <div class="row">
-      <div class="col-2">
-      <div class="forecast-date">${formatShortDay(date)}</div>
-      <img
-      src="${day.condition.icon_url}"
-      alt=""
-      width="40"
-          class="forecast-icon" />
-          <div class="forecast-temps">
-          <span class="forecast-max">${max}°</span>
-          <span class="forecast-min">${min}°</span>
-          </div>
-          </div>
-          </div>`;
-    }
-  });
-
-  let forecastData = document.querySelector("#forecast-data");
-  forecastData.innerHTML = forecastDataInjection;
 }
 
 let searchForm = document.querySelector("#search-form");
